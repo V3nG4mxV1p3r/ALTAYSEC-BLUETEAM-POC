@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  blue_level3:
+    build: .
+    container_name: altaysec_level3_lab
+    hostname: SOC-Terminal
+    restart: unless-stopped
+    stdin_open: true
+    tty: true

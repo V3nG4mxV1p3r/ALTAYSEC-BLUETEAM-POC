@@ -1,0 +1,4 @@
+Olay Yeri Raporu:
+SOC ekibimiz web sunucumuzda olağandışı bir trafik fark etti ancak sistem yöneticileri sunucuda herhangi bir zararlı dosya bulamadı. Saldırganın içeri nasıl sızdığını, hangi IP'ye bağlantı kurduğunu ve en önemlisi sistemden çaldığı veriyi (FLAG) loglardan analiz ederek bulmalısın.
+
+Not: Bayrak formatı ALTAY{...} şeklindedir.
