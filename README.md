@@ -1,61 +1,71 @@
-# 🛡️ AltaySec Blue Team Lab - Proof of Concept (PoC)
+# 🛡️ AltaySec Blue Team Interactive Labs - Proof of Concept (PoC)
 
-Bu repository, siber güvenlik eğitim platformları için tasarlanmış, **sıfır kurulum gerektiren (zero-setup)** ve tarayıcı üzerinden çalışan bir Blue Team / Adli Bilişim laboratuvar konseptidir.
+Bu repository, siber güvenlik eğitim platformları için tasarlanmış, **sıfır kurulum gerektiren (zero-setup)**, tarayıcı üzerinden çalışan ve CTF mantığıyla kodlanmış bir Blue Team / Olay Müdahale (Incident Response) laboratuvar konseptidir.
 
-## 🎯 Konsept: "Log Detective"
-Kullanıcılar, zafiyetli bir makineyi ayağa kaldırmak yerine, daha önceden saldırıya uğramış bir makinenin loglarını analiz ederek siber tehdit avcılığı (Threat Hunting) yaparlar. 
+## 🎯 Konsept: "Interactive Log Detective"
+Kullanıcılar, zafiyetli bir makineyi ayağa kaldırmak yerine, daha önceden saldırıya uğramış bir makinenin loglarını analiz ederek siber tehdit avcılığı (**Threat Hunting**) yaparlar. Yeni nesil eğitim platformlarında (**TryHackMe vb.**) olduğu gibi, analizciler bulgularını sistemdeki interaktif doğrulama scriptine girerek bayrağı (**Flag**) elde ederler.
 
-Bu PoC, **Gotty** aracı kullanılarak Docker konteyneri içindeki bash terminalini doğrudan `80` portu üzerinden web tarayıcısına yansıtır. Kullanıcı SSH bağlantısı veya herhangi bir araç kurulumu yapmadan `grep`, `awk`, `cat` gibi araçlarla anında analize başlayabilir.
+### ✨ Öne Çıkan Özellikler:
+* **Tarayıcı Tabanlı Terminal:** Gotty aracı kullanılarak Docker içindeki bash terminali doğrudan web tarayıcısına yansıtılır. SSH bağlantısı gerektirmez.
+* **Anti-Cheat (Hile Koruması):** Bayrakları (Flag) veren bash scriptleri `shc` ile derlenerek okunamaz makine kodu (Binary) haline getirilmiştir. Analizci, logları gerçekten analiz etmeden bayrağa ulaşamaz.
+* **Tam İzolasyon:** Her seviye kendi `docker-compose` ağı içinde yalıtılmış olarak çalışır.
+
+---
 
 ## 🚀 Lab Nasıl Çalıştırılır?
 
-Herhangi bir Docker yüklü sistemde aşağıdaki komutları çalıştırmak yeterlidir:
+Herhangi bir Docker yüklü sistemde, çözmek istediğiniz seviyenin klasörüne girip şu komutları çalıştırmak yeterlidir:
 
-1. İmajı indirin/inşa edin:
-docker build -t altaysec/blue-level-1 .
+1. Konteyneri inşa edin ve başlatın:
+```bash
+docker-compose up -d --build
+```
+2. Tarayıcınızdan terminale erişin (İlgili port üzerinden, örn: http://localhost:8080).
 
-2. Konteyneri başlatın:
-docker run -d -p 8081:80 altaysec/blue-level-1
+3. Analizi bitirdiğinizde terminale `./submit` yazarak interaktif sınav sistemini başlatın!
 
-3. Tarayıcınızdan terminale erişin:
-http://localhost:8081
+## 🟢 Level 1: Recon & Brute Force (Kolay)
+**Odak Noktası:** Web Trafiği Analizi, Kaba Kuvvet Saldırıları.
 
-## 📋 Senaryo: Gece Vardiyası (LFI Sızıntısı)
-Şirketin ana web sunucusuna gece saatlerinde bir saldırı gerçekleşti. Saldırganın Local File Inclusion (LFI) zafiyetini kullanarak kritik bir sistem dosyasını okuduğundan şüpheleniyoruz.
+**Senaryo:** Şirketin ana web sunucusuna yönelik bir dizin taraması ve ardından yönetici paneline kaba kuvvet (`Brute Force`) saldırısı gerçekleştirildi.
 
-**Görev:** `access.log` dosyasını analiz et ve bayrağı bul.
-* Saldırganın IP Adresi?
-* Kullanılan zafiyet parametresi?
-* Okunan kritik dosya?
+**Görev:** `access.log` dosyasını analiz et.
 
-**Flag Formatı:** `ALTAYSEC{IP_PARAMETRE_DOSYA}`
+Saldırganın IP adresini bul.
 
----
+**Başarılı (HTTP 302) giriş yaparken kullandığı Brute-Force aracını tespit et.**
 
-# 🛡️ Level 2: BASE64 (Intermediate)
-
-**Senaryo:** Bir saldırgan `/admin` paneline girmeye çalışıyor. IP engeline takılmamak için sürekli proxy değiştiriyor ancak arkasında kritik bir iz bırakıyor. Sisteme sızdıktan sonra çalıştırdığı zararlı komutu ise Base64 ile şifrelemiş.
-
-**Görevler:**
-1. Saldırganın sabit kalan User-Agent'ını bul.
-2. Başarılı giriş yapılan (302 Redirect) IP'yi tespit et.
-3. cmd parametresindeki Base64 komutu decode et.
-
-**Öğrenim Çıktıları:**
-* Karmaşık log dosyalarında `awk` ve `grep` kombinasyonları ile anomali tespiti.
-* User-Agent analizi ve Brute-Force tespiti.
-* Terminal üzerinden Base64 şifre çözümü (Deobfuscation).
+`./submit` çalıştır ve Flag'i kap.
 
 ---
 
-# 🛡️ Seviye 3: Gizlilik Operasyonu (Web ve İşletim Sistemi Log Korelasyonu)
-**Odak Noktası:** Olay Müdahale (DFIR), Log Korelasyonu, Dosyasız (Fileless) Yürütme Analizi, Base64 Deşifreleme.
+## 🟡 Level 2: Shellshock CVE-2014-6271 (Orta)
+**Odak Noktası:** Zafiyet Sömürüsü, Payload Deobfuscation, Anomali Tespiti.
 
-**Senaryo:** Gelişmiş bir tehdit aktörü, sisteme ters bağlantı (reverse shell) açmak için resim dosyası görünümünde gizli bir web shell yükler. SOC analisti, saldırganın ilk giriş anından itibaren kodlanmış `curl` komutlarıyla veri sızdırmasına kadar olan ayak izlerini takip etmek için `access.log` (L7) ile `system_audit.log` (L4/L3) dosyalarını birbirleriyle ilişkilendirmelidir (korelasyon).
+**Senaryo:** Gürültülü web trafiği (**Nikto taramaları**) arasında gizlenen bir saldırgan, eski bir CGI scripti üzerinden "**Shellshock**" zafiyetini sömürerek sisteme sızmaya çalışıyor.
 
-**Kazanımlar:**
-- Web servislerinden (`www-data`) işletim sistemi seviyesine geçişin ve komut yürütme adımlarının izlenmesi.
-- Sistem denetim (audit) loglarından gizlenmiş (obfuscated) zararlı yüklerin deşifre edilmesi.
-- Komuta Kontrol (C2) IP adreslerinin ve sızdırılan hassas veri bayraklarının (Flag) tespit edilmesi.
+**Görev:** `access.log` içindeki kalabalığı filtrele.
 
-*Developed by Emir - AltaySec Lab Researcher*
+**Shellshock** zafiyetinin imzasını (desenini) bul.
+
+Zafiyeti sömürmek için hedef alınan dosya yolunu tespit et.
+
+İşletim sisteminde çalıştırılan zararlı payload'u deşifre et.
+
+---
+
+## 🔴 Level 3: Stealth Mode & DFIR (Zor)
+**Odak Noktası:** Olay Müdahale (**DFIR**), Log Korelasyonu, Web'den OS'e Sıçrama Analizi.
+
+**Senaryo:** Gelişmiş bir tehdit aktörü, sisteme ters bağlantı (**reverse shell**) açmak için resim dosyası görünümünde gizli bir web shell yükler.
+**Görev:** **L7** (Web) ve **L4/L3** (Sistem) loglarını birbirleriyle ilişkilendirerek (korelasyon) büyük resmi gör.
+
+`access.log` üzerinden saldırıyı başlatan aracı ve yüklenen zararlı dosyayı bul.
+
+`system_audit.log` dosyasına geçerek saldırganın sistemdeki ayak izlerini takip et.
+
+Veri sızıntısını (**Exfiltration**) yakala ve C2 sunucusuna gönderilen **Base64** şifreli veriyi tespit et.
+
+---
+
+*Developed by Emir - Information Security Specialist / Lab Researcher*
