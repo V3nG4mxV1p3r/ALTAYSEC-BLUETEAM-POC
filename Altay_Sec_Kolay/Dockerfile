@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install -y wget curl nano grep gawk shc gcc && \
 
 WORKDIR /home/analyst
 
-# Dosyaları içeri kopyala
 COPY access.log /home/analyst/access.log
 COPY submit.sh /home/analyst/submit.sh
 
