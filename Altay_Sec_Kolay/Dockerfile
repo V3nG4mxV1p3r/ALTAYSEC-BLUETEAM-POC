@@ -8,11 +8,11 @@ RUN apt-get update && apt-get install -y wget curl nano grep gawk && \
 
 WORKDIR /home/analyst
 
-# Dosyaları içeri kopyala
+
 COPY access.log /home/analyst/access.log
 COPY submit.sh /home/analyst/submit.sh
 
-# Görev dosyasını oluştur, scripti çalıştırılabilir yap ve Windows satır sonu (\r) hatasını düzelt
+
 RUN echo "LEVEL 1: RECON & BRUTE FORCE \n\nGOREV: access.log dosyasini incele ve bulgularini not et. \nHazir oldugunda terminale './submit.sh' yazarak cevaplarini sisteme gir ve bayragini (Flag) al!" > gorev.txt && \
     chmod +x /home/analyst/submit.sh && \
     sed -i 's/\r$//' /home/analyst/submit.sh
