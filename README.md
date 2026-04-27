@@ -75,34 +75,6 @@ Gelişmiş bir tehdit aktörü, sisteme ters bağlantı (**reverse shell**) açm
 
 ---
 
-# 🌐 AltaySec Blue Team Lab: Network Forensics (DNS Tunneling)
-
-Bu laboratuvar, siber güvenlik analistlerinin (SOC/DFIR) ağ trafiği üzerinden veri sızıntılarını (Data Exfiltration) tespit etme yeteneklerini test etmek için hazırlanmış **interaktif ve kurulumsuz (zero-setup)** bir eğitim modülüdür.
-
-## 📝 Senaryo:
-Şirket iç ağındaki bir cihazın, güvenlik duvarlarını (Firewall) atlatmak için en masum görünen protokolü (DNS - Port 53) kullanarak dışarıya gizli veri sızdırdığından şüphelenilmektedir. Ağ mühendisleri tarafından yakalanan bir ağ trafiği dökümü (`evidence.pcap`) analiz edilmek üzere size teslim edilmiştir.
-
-## 🎯 Görevler
-Docker konteyneri içinde hazır olarak gelen `tshark` (Wireshark komut satırı aracı) aracını kullanarak trafiği analiz etmelisiniz:
-* Ağda DNS tünelleme yaparak veri sızdıran şüpheli kaynağı (IP adresi) tespit edin.
-* Veri sızıntısı için kullanılan sahte Komuta Kontrol (C2) alan adını (domain) bulun.
-* DNS paketleri (A kayıtları) içine gizlenmiş Base64 formatlı şifreli veriyi yakalayın.
-
-## ⚙️ Teknik Altyapı ve Anti-Cheat Modülü
-* **Dinamik PCAP Üretimi:** Laboratuvar ayağa kaldırıldığında, `Python Scapy` kütüphanesi kullanılarak arka planda gerçek zamanlı ve %100 geçerli ağ paketleri üretilir.
-* **Hile Koruması (Anti-Cheat):** Analizcilerin bayrağı (Flag) almak için kullandığı `submit` doğrulama sistemi, `shc` ile derlenerek okunamaz makine kodu (binary) haline getirilmiştir. Kaynak kod okunamadığı için analizin gerçekten yapılması zorunludur.
-* **Web Tabanlı Terminal:** `Gotty` aracı sayesinde hiçbir SSH veya VPN bağlantısına gerek kalmadan doğrudan web tarayıcısı üzerinden güvenli terminal erişimi sağlanır.
-
-## 🚀 Lab Nasıl Çalıştırılır?
-
-Bu klasör dizinindeyken PowerShell veya terminal üzerinden aşağıdaki komutu çalıştırarak laboratuvarı inşa edin:
-
-```bash
-docker-compose up -d --build
-```
-
-**Daha sonra tarayıcınızdan analist terminaline bağlanın:**
-http://localhost:8083
 
 Terminal açıldığında tshark -r evidence.pcap komutuyla analizine başla. Tüm parçaları birleştirdiğinde `./submit` komutunu çalıştırarak bulgularını doğrula ve bayrağı (Flag) ele geçir!
 
